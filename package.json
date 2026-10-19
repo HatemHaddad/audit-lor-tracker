@@ -8,8 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "db:push": "prisma db push",
-    "db:seed": "tsx prisma/seed.ts",
-    "setup": "prisma db push && tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts --force",
+    "setup": "prisma db push && tsx prisma/seed.ts --force"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.135.0",

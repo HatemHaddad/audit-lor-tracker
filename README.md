@@ -66,7 +66,27 @@ npm run dev                 # http://localhost:3000
 The demo has no login. Use the **user switcher** in the top bar to act as an auditor or an auditee.
 (For the demo data to look like your current reports, set `APP_TODAY="2026-10-19"`.)
 
-## Deploy
+## Deploy on your own VPS (Docker)
+
+Needs Ubuntu/Debian with ports 80 and 443 open. For HTTPS (required by the Teams bot), point a domain's DNS A record at the server first.
+
+```bash
+ssh you@your-server
+git clone https://github.com/HatemHaddad/audit-lor-tracker.git
+cd audit-lor-tracker
+bash deploy.sh lor.yourdomain.com     # or just: bash deploy.sh   (HTTP on the server IP)
+```
+
+`deploy.sh` installs Docker if it's missing and creates `.env.production` with random secrets and a **site password**, which it prints. It then starts two containers: the app, and Caddy (automatic Let's Encrypt HTTPS). The database and uploaded files live in the `lor-data` Docker volume.
+
+- **Settings:** edit `.env.production` (API key, Teams, password), then run `docker compose up -d`.
+- **Update:** `git pull && bash deploy.sh`
+- **Logs:** `docker compose logs -f app`
+- **Backup:** `docker run --rm -v audit-lor-tracker_lor-data:/d -v $PWD:/b alpine tar czf /b/lor-backup.tgz -C /d .`
+- **Demo data:** loads on first start only when the database is empty (`SEED_DEMO=1`). Set `SEED_DEMO=0` before the first start for a clean system.
+- **Daily reminders:** `deploy.sh` prints the crontab line to add.
+
+## Deploy (managed cloud)
 
 1. **Database:** create Azure Database for PostgreSQL (or Neon/Supabase). In `prisma/schema.prisma` set `provider = "postgresql"`, then set `DATABASE_URL` and run `npx prisma db push`.
 2. **App:** deploy to Azure App Service / Container Apps (Node 20+) or Vercel. Set the variables from `.env.example`. Set `APP_URL` to the public URL.

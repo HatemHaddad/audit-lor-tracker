@@ -3,10 +3,20 @@ import { db } from "@/lib/db";
 import { currentUser } from "@/lib/session";
 import { switchUser } from "@/app/actions";
 import { now, fmtDate } from "@/lib/status";
+import { cookies } from "next/headers";
+import { SITE_COOKIE, sitePasswordEnabled, siteToken } from "@/lib/site-auth";
 
 export async function Nav() {
-  const [user, users] = await Promise.all([currentUser(), db.user.findMany({ orderBy: [{ role: "asc" }, { name: "asc" }] })]);
   const org = process.env.ORG_NAME ?? "Internal Audit";
+  if (sitePasswordEnabled() && (await cookies()).get(SITE_COOKIE)?.value !== (await siteToken())) {
+    // Not signed in (login page / public review links): no navigation or user list.
+    return (
+      <header className="bg-brand text-white">
+        <div className="mx-auto max-w-[1400px] px-4 sm:px-6 h-14 flex items-center font-semibold">{org} · LOR Tracker</div>
+      </header>
+    );
+  }
+  const [user, users] = await Promise.all([currentUser(), db.user.findMany({ orderBy: [{ role: "asc" }, { name: "asc" }] })]);
   const links =
     user?.role === "AUDITEE"
       ? [{ href: "/portal", label: "My requests" }]

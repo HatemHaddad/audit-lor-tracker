@@ -55,6 +55,11 @@ const AREAS = [
 ];
 
 async function main() {
+  // Safety: never wipe a database that already has audits unless forced.
+  if ((await db.audit.count()) > 0 && !process.argv.includes("--force")) {
+    console.log("Database already has data — skipping demo seed (use --force to reset).");
+    return;
+  }
   await db.outboxMessage.deleteMany();
   await db.activity.deleteMany();
   await db.document.deleteMany();

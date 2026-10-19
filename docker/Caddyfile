@@ -1,0 +1,9 @@
+# SITE_ADDRESS = your domain (e.g. lor.example.com) for automatic HTTPS,
+# or ":80" to serve plain HTTP on the server IP.
+{$SITE_ADDRESS::80} {
+	encode gzip
+	request_body {
+		max_size 60MB
+	}
+	reverse_proxy app:3000
+}
