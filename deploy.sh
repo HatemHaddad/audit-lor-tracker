@@ -21,7 +21,12 @@ if [ ! -f .env.production ]; then
   echo "Created .env.production — site password: $PASS  (edit the file to change it or add API keys)"
 fi
 
-if [ -n "$DOMAIN" ]; then echo "SITE_ADDRESS=$DOMAIN" > .env; elif [ ! -f .env ]; then echo "SITE_ADDRESS=:80" > .env; fi
+touch .env
+if [ -n "$DOMAIN" ]; then
+  sed -i '/^SITE_ADDRESS=/d' .env && echo "SITE_ADDRESS=$DOMAIN" >> .env
+elif ! grep -q '^SITE_ADDRESS=' .env; then
+  echo "SITE_ADDRESS=:80" >> .env
+fi
 
 docker compose up -d --build
 docker compose ps
