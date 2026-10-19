@@ -12,7 +12,7 @@ const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
 const d = (iso: string) => new Date(iso + "T00:00:00Z");
 const addDays = (dt: Date, n: number) => new Date(dt.getTime() + n * 86_400_000);
 
-const FPM_ITEMS = [
+const FIN_ITEMS = [
   "Strategy and strategic plan, including defined long-term and short-term plans/goals and objectives; Strategic and Operations KPIs, targets vs actuals.",
   "Policies and procedures.",
   "Organizational structure, list of current staff including names, campus location and responsibilities (JDs).",
@@ -45,13 +45,13 @@ const GENERIC_DOCS = [
 const PERIODS = ["for 2024", "for 2025", "for 2024–2025", "for AY 2025/26", "for the last 12 months"];
 
 const AREAS = [
-  { code: "FPM-2026", name: "Financial Planning and Modelling", dept: "Budget and Reporting & Payroll", total: 87, received: 65, review: 0, plan: ["2026-09-01", "2026-09-21"], exec: ["2026-09-22", "2026-11-20"], rep: ["2026-11-21", "2026-12-15"] },
-  { code: "APE-2026", name: "Associate Provost of Education", dept: "Associate Provost of Education", total: 115, received: 35, review: 0, plan: ["2026-08-25", "2026-09-15"], exec: ["2026-09-16", "2026-11-05"], rep: ["2026-11-06", "2026-11-30"] },
-  { code: "APFA-2026", name: "Associate Provost for Faculty Affairs", dept: "Associate Provost for Faculty Affairs", total: 81, received: 42, review: 5, plan: ["2026-09-01", "2026-09-20"], exec: ["2026-09-21", "2026-11-15"], rep: ["2026-11-16", "2026-12-10"] },
-  { code: "SS-2026", name: "Student Services", dept: "Student Services", total: 55, received: 0, review: 3, plan: ["2026-10-12", "2026-10-30"], exec: ["2026-11-01", "2026-12-15"], rep: ["2026-12-16", "2027-01-10"] },
-  { code: "MC-2026", name: "Marketing and Communication", dept: "Marketing and Communication", total: 49, received: 0, review: 0, plan: ["2026-10-19", "2026-11-06"], exec: ["2026-11-09", "2026-12-18"], rep: ["2027-01-04", "2027-01-25"] },
-  { code: "OP-2026", name: "Office of the President", dept: "Chief of Staff", total: 43, received: 0, review: 0, plan: ["2026-11-02", "2026-11-20"], exec: ["2026-11-23", "2027-01-15"], rep: ["2027-01-18", "2027-02-05"] },
-  { code: "ER-2026", name: "External Relationship", dept: "External Relationship", total: 38, received: 0, review: 0, plan: ["2026-11-09", "2026-11-27"], exec: ["2026-11-30", "2027-01-22"], rep: ["2027-01-25", "2027-02-12"] },
+  { code: "FIN-2026", name: "Budgeting and Financial Planning", dept: "Finance", total: 87, received: 65, review: 0, plan: ["2026-09-01", "2026-09-21"], exec: ["2026-09-22", "2026-11-20"], rep: ["2026-11-21", "2026-12-15"] },
+  { code: "HR-2026", name: "Human Resources", dept: "Human Resources", total: 115, received: 35, review: 0, plan: ["2026-08-25", "2026-09-15"], exec: ["2026-09-16", "2026-11-05"], rep: ["2026-11-06", "2026-11-30"] },
+  { code: "PROC-2026", name: "Procurement", dept: "Procurement", total: 81, received: 42, review: 5, plan: ["2026-09-01", "2026-09-20"], exec: ["2026-09-21", "2026-11-15"], rep: ["2026-11-16", "2026-12-10"] },
+  { code: "IT-2026", name: "IT General Controls", dept: "Information Technology", total: 55, received: 0, review: 3, plan: ["2026-10-12", "2026-10-30"], exec: ["2026-11-01", "2026-12-15"], rep: ["2026-12-16", "2027-01-10"] },
+  { code: "FAC-2026", name: "Facilities Management", dept: "Facilities", total: 49, received: 0, review: 0, plan: ["2026-10-19", "2026-11-06"], exec: ["2026-11-09", "2026-12-18"], rep: ["2027-01-04", "2027-01-25"] },
+  { code: "GOV-2026", name: "Governance and Compliance", dept: "Legal and Compliance", total: 43, received: 0, review: 0, plan: ["2026-11-02", "2026-11-20"], exec: ["2026-11-23", "2027-01-15"], rep: ["2027-01-18", "2027-02-05"] },
+  { code: "PR-2026", name: "Projects and Contracts", dept: "Projects Office", total: 38, received: 0, review: 0, plan: ["2026-11-09", "2026-11-27"], exec: ["2026-11-30", "2027-01-22"], rep: ["2027-01-25", "2027-02-12"] },
 ];
 
 async function main() {
@@ -71,13 +71,13 @@ async function main() {
 
   const auditors = await Promise.all(
     [
-      { name: "Sara Al Mansoori", email: "sara.almansoori@example.edu", role: "AUDITOR", department: "Internal Audit" },
-      { name: "Omar Haddad", email: "omar.haddad@example.edu", role: "AUDITOR", department: "Internal Audit" },
+      { name: "Sarah Mitchell", email: "sarah.mitchell@example.com", role: "AUDITOR", department: "Internal Audit" },
+      { name: "Daniel Brooks", email: "daniel.brooks@example.com", role: "AUDITOR", department: "Internal Audit" },
     ].map((data) => db.user.create({ data })),
   );
   const auditeeNames = [
-    "Hassan Ibrahim", "Mariam Al Suwaidi", "Rashid Kareem", "Aisha Rahman", "Yousef Nabil", "Noura Saeed", "Khalid Mansour",
-    "Huda Al Amiri", "Tariq Aziz", "Salma Fathi", "Faisal Qasim", "Reem Al Ketbi", "Imran Siddiqui", "Dana Haddad",
+    "Emma Clarke", "Liam Turner", "Olivia Bennett", "Noah Walker", "Ava Collins", "Ethan Price", "Mia Foster",
+    "Lucas Reed", "Chloe Hayes", "Mason Ward", "Grace Porter", "Henry Shaw", "Isla Morgan", "Jack Ellis",
   ];
   const owners: Record<string, string[]> = {};
   let ai = 0;
@@ -86,7 +86,7 @@ async function main() {
     for (let k = 0; k < 2; k++) {
       const name = auditeeNames[ai++];
       const u = await db.user.create({
-        data: { name, email: name.toLowerCase().replace(/ /g, ".") + "@example.edu", role: "AUDITEE", department: a.dept },
+        data: { name, email: name.toLowerCase().replace(/ /g, ".") + "@example.com", role: "AUDITEE", department: a.dept },
       });
       owners[a.code].push(u.id);
     }
@@ -110,8 +110,8 @@ async function main() {
     const planCount = Math.round(a.total * 0.35);
     for (let i = 1; i <= a.total; i++) {
       const title =
-        a.code === "FPM-2026" && i <= FPM_ITEMS.length
-          ? FPM_ITEMS[i - 1]
+        a.code === "FIN-2026" && i <= FIN_ITEMS.length
+          ? FIN_ITEMS[i - 1]
           : `${GENERIC_DOCS[(i * 7 + idx) % GENERIC_DOCS.length]} ${PERIODS[(i + idx) % PERIODS.length]} (${a.name}, item ${i})`;
       const phase = i <= planCount ? "PLANNING" : "EXECUTION";
       const due = phase === "PLANNING" ? addDays(requested, 7) : addDays(d(a.exec[0]), 7);

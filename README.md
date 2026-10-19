@@ -99,7 +99,7 @@ bash deploy.sh lor.yourdomain.com     # or just: bash deploy.sh   (HTTP on the s
 1. Azure portal → **Azure Bot** → create (single tenant). Copy the App ID, create a client secret and note the tenant ID → set `MICROSOFT_APP_ID`, `MICROSOFT_APP_PASSWORD` and `MICROSOFT_APP_TENANT_ID`.
 2. In the bot's Configuration, set the **Messaging endpoint** to `https://<your-host>/api/teams/messages`. Under Channels, enable **Microsoft Teams**.
 3. In `teams-app/manifest.json`, replace `{{MICROSOFT_APP_ID}}`, `{{APP_URL}}` and `{{APP_HOST}}`. Zip `manifest.json`, `color.png` and `outline.png`, then upload it in Teams Admin Center (or *Apps → Manage your apps → Upload*).
-4. Add the app to the audit team's channel. The bot remembers the channel. Type `@LOR Tracker bind FPM-2026` to restrict a channel to one audit.
+4. Add the app to the audit team's channel. The bot remembers the channel. Type `@LOR Tracker bind FIN-2026` to restrict a channel to one audit.
 
 ### Connect Teams: webhook only
 
