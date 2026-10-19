@@ -1,26 +1,63 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --surface: #f4f6fa;
+  --card: #ffffff;
+  --ink: #0f1b2d;
+  --ink-2: #4a5568;
+  --ink-3: #8a94a6;
+  --line: #e3e8f0;
+  --brand: #1b3a6b;
+  --brand-2: #24508f;
+  --series-1: #2a78d6;
+  --series-light: #86b6ef;
+  --series-dark: #1c5cab;
+  --track: #e6eaf0;
+  --good: #0ca30c;
+  --warning: #fab219;
+  --serious: #ec835a;
+  --critical: #d03b3b;
+  --neutral: #8a94a6;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-line: var(--line);
+  --color-brand: var(--brand);
+  --color-brand-2: var(--brand-2);
+  --color-series: var(--series-1);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--surface);
+  color: var(--ink);
+  font-family: var(--font-sans);
 }
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(15, 27, 45, 0.04);
+}
+.btn {
+  display: inline-flex; align-items: center; gap: .4rem;
+  border-radius: 8px; padding: .5rem .9rem; font-size: .875rem; font-weight: 500;
+  border: 1px solid var(--line); background: var(--card); color: var(--ink);
+}
+.btn:hover { background: #f0f3f8; }
+.btn-primary { background: var(--brand); border-color: var(--brand); color: #fff; }
+.btn-primary:hover { background: var(--brand-2); }
+.btn:disabled { opacity: .55; cursor: not-allowed; }
+.input {
+  width: 100%; border: 1px solid var(--line); border-radius: 8px; padding: .5rem .7rem;
+  font-size: .875rem; background: #fff; color: var(--ink);
+}
+.input:focus { outline: 2px solid var(--series-light); outline-offset: 0; }
+.label { font-size: .75rem; font-weight: 600; color: var(--ink-2); text-transform: uppercase; letter-spacing: .03em; }
+.tnum { font-variant-numeric: tabular-nums; }

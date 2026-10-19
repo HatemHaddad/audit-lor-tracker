@@ -1,9 +1,8 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  serverExternalPackages: ["botbuilder", "@prisma/client", "mammoth", "xlsx"],
+  experimental: { serverActions: { bodySizeLimit: "20mb" } },
   turbopack: {
     rules: {
       "*.css": {

@@ -1,0 +1,35 @@
+{
+  "$schema": "https://developer.microsoft.com/en-us/json-schemas/teams/v1.17/MicrosoftTeams.schema.json",
+  "manifestVersion": "1.17",
+  "version": "1.0.0",
+  "id": "{{MICROSOFT_APP_ID}}",
+  "developer": {
+    "name": "Internal Audit",
+    "websiteUrl": "{{APP_URL}}",
+    "privacyUrl": "{{APP_URL}}",
+    "termsOfUseUrl": "{{APP_URL}}"
+  },
+  "name": { "short": "LOR Tracker", "full": "Audit LOR Tracker" },
+  "description": {
+    "short": "Audit List of Requirements workflow",
+    "full": "Notifies auditors of documents uploaded against audit LOR items, lets them accept, partially accept or return submissions inside Teams, and reminds auditees of outstanding items."
+  },
+  "icons": { "color": "color.png", "outline": "outline.png" },
+  "accentColor": "#1B3A6B",
+  "bots": [
+    {
+      "botId": "{{MICROSOFT_APP_ID}}",
+      "scopes": ["team", "groupChat", "personal"],
+      "supportsFiles": false,
+      "isNotificationOnly": false,
+      "commandLists": [
+        { "scopes": ["team", "groupChat"], "commands": [{ "title": "bind", "description": "bind <AUDIT-CODE> — only post cards for one audit here" }] }
+      ]
+    }
+  ],
+  "staticTabs": [
+    { "entityId": "dashboard", "name": "Dashboard", "contentUrl": "{{APP_URL}}/", "websiteUrl": "{{APP_URL}}/", "scopes": ["personal"] }
+  ],
+  "permissions": ["identity", "messageTeamMembers"],
+  "validDomains": ["{{APP_HOST}}"]
+}

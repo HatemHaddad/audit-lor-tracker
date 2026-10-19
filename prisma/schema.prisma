@@ -1,0 +1,135 @@
+// Audit LOR (List of Requirements) workflow
+// Dev uses SQLite. For production switch provider to "postgresql"
+// (Azure Database for PostgreSQL / Neon / Supabase) and set DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String  @id @default(cuid())
+  name       String
+  email      String  @unique
+  role       String  // AUDITOR | AUDITEE | ADMIN
+  department String?
+
+  ledAudits   Audit[]       @relation("LeadAuditor")
+  ownedReqs   Requirement[] @relation("ReqOwner")
+  uploads     Document[]    @relation("Uploader")
+  reviews     Document[]    @relation("Reviewer")
+}
+
+model Audit {
+  id             String   @id @default(cuid())
+  code           String   @unique // e.g. FPM-2026
+  name           String           // e.g. Financial Planning and Modelling
+  auditeeDept    String
+  description    String?
+  leadAuditorId  String?
+  leadAuditor    User?    @relation("LeadAuditor", fields: [leadAuditorId], references: [id])
+  planningStart  DateTime
+  planningEnd    DateTime
+  executionStart DateTime
+  executionEnd   DateTime
+  reportingStart DateTime
+  reportingEnd   DateTime
+  createdAt      DateTime @default(now())
+
+  requirements Requirement[]
+  activities   Activity[]
+}
+
+model Requirement {
+  id            String    @id @default(cuid())
+  auditId       String
+  audit         Audit     @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  refNo         Int
+  title         String
+  phase         String    // PLANNING | EXECUTION | REPORTING
+  ownerId       String?
+  owner         User?     @relation("ReqOwner", fields: [ownerId], references: [id])
+  // The three workflow dates
+  dateRequested DateTime  @default(now())
+  dateReceived  DateTime? // latest upload by auditee
+  dateReviewed  DateTime? // latest auditor decision
+  dueDate       DateTime
+  // PENDING | UPLOADED (pending review) | PARTIAL | RECEIVED | REJECTED | NOT_APPLICABLE
+  status        String    @default("PENDING")
+  cycle         Int       @default(1) // increments each time the auditor sends it back
+  lastComment   String?
+  lastReminderAt DateTime?
+
+  documents  Document[]
+  activities Activity[]
+
+  @@unique([auditId, refNo])
+}
+
+model Document {
+  id            String    @id @default(cuid())
+  requirementId String
+  requirement   Requirement @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+  cycle         Int
+  fileName      String
+  storedPath    String
+  mimeType      String
+  size          Int
+  uploadedById  String?
+  uploadedBy    User?     @relation("Uploader", fields: [uploadedById], references: [id])
+  uploadedAt    DateTime  @default(now())
+  note          String?
+
+  // Auditor decision: PENDING_REVIEW | ACCEPTED | PARTIAL | REJECTED
+  reviewStatus  String    @default("PENDING_REVIEW")
+  reviewedById  String?
+  reviewedBy    User?     @relation("Reviewer", fields: [reviewedById], references: [id])
+  reviewedAt    DateTime?
+  reviewComment String?
+
+  // AI pre-screening (Document Review Agent)
+  aiStatus      String    @default("QUEUED") // QUEUED | DONE | SKIPPED | ERROR
+  aiVerdict     String?   // SUFFICIENT | PARTIAL | INSUFFICIENT | UNREADABLE
+  aiConfidence  Float?
+  aiSummary     String?
+  aiGaps        String?   // JSON array of strings
+  aiSuggestedComment String?
+}
+
+model Activity {
+  id            String   @id @default(cuid())
+  auditId       String
+  audit         Audit    @relation(fields: [auditId], references: [id], onDelete: Cascade)
+  requirementId String?
+  requirement   Requirement? @relation(fields: [requirementId], references: [id], onDelete: Cascade)
+  actor         String
+  type          String   // REQUESTED | UPLOADED | AI_REVIEWED | ACCEPTED | PARTIAL | REJECTED | REMINDER | TEAMS
+  message       String
+  createdAt     DateTime @default(now())
+}
+
+// Teams conversations the bot has been installed into (for proactive cards)
+model TeamsConversation {
+  id           String   @id @default(cuid())
+  conversationId String @unique
+  name         String?
+  reference    String   // JSON ConversationReference
+  auditCode    String?  // optional: bind a channel to one audit; null = all audits
+  createdAt    DateTime @default(now())
+}
+
+// Every Teams card the app emits is also kept here (audit trail + dev preview
+// when Teams is not yet connected).
+model OutboxMessage {
+  id        String   @id @default(cuid())
+  kind      String   // UPLOAD | DECISION | REMINDER | LOR_ISSUED
+  auditCode String
+  title     String
+  card      String   // Adaptive Card JSON
+  delivered String   // comma list: bot,webhook or "local"
+  createdAt DateTime @default(now())
+}
